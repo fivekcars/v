@@ -1,7 +1,12 @@
 # VIX-SCAN — Live Hosting & Domain Setup Guide
 
 Domain: **vix-scan.co.uk**
-Website: a static build of this repository (`npm run build` → `dist/`).
+Website: a static build of this repository (`npm run build` → `dist/`), hosted on GitHub Pages.
+
+> **Current setup (updated):** DNS is now managed by **Cloudflare**, which proxies traffic to the
+> GitHub Pages origin and provides the TLS certificate. See
+> [`CLOUDFLARE_SETUP.md`](CLOUDFLARE_SETUP.md) for the live configuration. The GitHub-native
+> instructions below remain valid if you ever move DNS back to direct GitHub Pages.
 
 There are two parts to going live:
 

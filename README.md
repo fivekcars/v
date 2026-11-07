@@ -21,6 +21,7 @@ Dalton-in-Furness, Barrow-in-Furness, Ulverston and the wider Furness area.
 | `scripts/prerender.mjs` | Injects the pre-rendered markup into `dist/index.html` |
 | `public/` | `favicon.svg`, `robots.txt`, `sitemap.xml`, `CNAME`, `404.html`, web manifest |
 | `docs/DOMAIN_AND_HOSTING_SETUP.md` | **Registrar DNS guide** for `vix-scan.co.uk` |
+| `docs/CLOUDFLARE_SETUP.md` | **Active Cloudflare DNS + HTTPS configuration** |
 | `replit-export/` | Original Replit export and `Vvix-main.zip` (design source/reference — not used by the build) |
 | `Furness_Vehicle_Insight_Full_Website_and_Business_Blueprint.md` | Business and product blueprint |
 
