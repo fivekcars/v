@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://vix-scan.co.uk/sitemap.xml

@@ -1,0 +1,14 @@
+html {
+  scroll-behavior: smooth;
+  background: #f4f6f7;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+}
+
+#root {
+  isolation: isolate;
+}

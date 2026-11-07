@@ -1,0 +1,16 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "Sz4GoMuS6lvWKznFJHm2j"
+uri = "file://generated-artifacts/furness-vehicle-insight.zip"
+type = "unspecified"
+title = "Furness Vehicle Insight website ZIP"
+description = "Downloadable static website source, including HTML, CSS, JavaScript, favicon, and README. The enquiry form creates a local draft only."
+logical_id = "4344505f-cdd8-47e3-99bb-82381bd5c6ae"
+content_hash = "sha256:47b8a83b6de19badae7046381dab0497699fbb7c6dc84bcd754265aeea402450"
+size = 21120
+mtime_ms = 1794066635963
+storage_uri = "gcs://replit-rams-assets-archer/rams/assets/repl:37d79296-d57d-40c1-972f-90ca55fa38e1/4344505f-cdd8-47e3-99bb-82381bd5c6ae/88485c92-2fa9-4d81-a300-c9115fcd0c5a"
+storage_version_token = "1794066641455181"
+content_type = "application/octet-stream"
