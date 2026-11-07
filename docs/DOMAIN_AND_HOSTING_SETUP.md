@@ -20,6 +20,8 @@ only thing needed** — no extra account, no extra service, no billing.
 
 1. Open <https://github.com/fivekcars/v/settings/pages>
 2. Under **Build and deployment → Source**, choose **GitHub Actions**.
+   If it currently says **Deploy from a branch**, that is the wrong setting — branch mode publishes
+   the raw source files instead of the built site, which produces a blank page.
 3. That is the whole setup. The workflow `Deploy VIX-SCAN website` builds `dist/` and publishes it on
    every push to `main`.
 
