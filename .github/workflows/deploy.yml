@@ -18,6 +18,8 @@ jobs:
   build:
     name: Build site
     runs-on: ubuntu-latest
+    outputs:
+      pages_enabled: ${{ steps.pages.outputs.enabled }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -34,15 +36,27 @@ jobs:
       - name: Build and pre-render
         run: npm run build
 
+      # Creating a Pages site needs repository administration rights, which the
+      # workflow token does not have. Check whether Pages has been switched on
+      # and give a clear message if it has not.
+      - name: Check GitHub Pages status
+        id: pages
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh api "repos/${GITHUB_REPOSITORY}/pages" >/dev/null 2>&1; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "::warning title=GitHub Pages is not enabled::Open Settings → Pages, set Source to 'GitHub Actions', then re-run this workflow."
+          fi
+
       - name: Configure GitHub Pages
+        if: steps.pages.outputs.enabled == 'true'
         uses: actions/configure-pages@v5
-        with:
-          # Creates the Pages site automatically on first run.
-          enablement: true
-          # Attaches the custom domain so HTTPS can be provisioned once DNS is set.
-          cname: vix-scan.co.uk
 
       - name: Upload site artifact
+        if: steps.pages.outputs.enabled == 'true'
         uses: actions/upload-pages-artifact@v3
         with:
           path: dist
@@ -50,6 +64,7 @@ jobs:
   deploy:
     name: Deploy to GitHub Pages
     needs: build
+    if: needs.build.outputs.pages_enabled == 'true'
     runs-on: ubuntu-latest
     environment:
       name: github-pages

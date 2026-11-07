@@ -5,65 +5,45 @@ Website: a static build of this repository (`npm run build` → `dist/`).
 
 There are two parts to going live:
 
-1. **Host the files** (this repository is already configured for Netlify, Vercel, Cloudflare Pages and GitHub Pages).
-2. **Point the domain at the host** in the registrar control panel (DNS records below).
+1. **Switch on GitHub Pages** for this repository — one toggle, section 1.
+2. **Point the domain at GitHub Pages** in the registrar control panel, sections 2 and 3.
+
+Other hosts (Netlify, Vercel, Cloudflare Pages) remain configured in the repo if you ever want them,
+but they are not needed.
 
 ---
 
-## 1. Choose your host
+## 1. One-time: switch on GitHub Pages (30 seconds)
 
-| Host | Cost | Best for | Config in this repo |
-|---|---|---|---|
-| **Netlify** (recommended) | Free | Works with this **private** repository on the free plan; simple DNS instructions | `netlify.toml` |
-| **Cloudflare Pages** | Free | Free DNS + CDN; private repos supported | Build command `npm run build`, output `dist` |
-| **Vercel** | Free | Fast global CDN, preview deployments | `vercel.json` |
-| **GitHub Pages** | Free | Only for **public** repos (or a paid GitHub plan) | `.github/workflows/deploy.yml` |
+The repository is public and the deployment workflow is already committed, so **GitHub Pages is the
+only thing needed** — no extra account, no extra service, no billing.
 
-> **Important:** `github.com/fivekcars/v` is currently a **private** repository. GitHub Pages is not
-> available for private repositories on the free plan, so use **Netlify**, **Cloudflare Pages** or
-> **Vercel** — or make the repository public if you prefer GitHub Pages.
+1. Open <https://github.com/fivekcars/v/settings/pages>
+2. Under **Build and deployment → Source**, choose **GitHub Actions**.
+3. That is the whole setup. The workflow `Deploy VIX-SCAN website` builds `dist/` and publishes it on
+   every push to `main`.
 
-You only need one host. The steps below cover Netlify first, then GitHub Pages.
+> This toggle is the one step that cannot be automated: creating a Pages site requires repository
+> administration rights, which the automation token used here does not have.
+
+If an earlier run failed because Pages was not enabled yet, open
+**Actions → Deploy VIX-SCAN website → Re-run all jobs** once after enabling it.
+
+Your site will be live at `https://fivekcars.github.io/v/` immediately, and at `https://vix-scan.co.uk`
+once the domain is attached (section 2).
 
 ---
 
-## 2. Deploy with Netlify (recommended)
+## 2. Attach `vix-scan.co.uk`
 
-1. Go to <https://app.netlify.com> and sign in (GitHub login is easiest).
-2. **Add new site → Import an existing project → GitHub**, then choose `fivekcars/v`.
-3. Netlify reads `netlify.toml` automatically. Confirm:
-   - **Build command:** `npm run build`
-   - **Publish directory:** `dist`
-4. Click **Deploy site**. The first build takes about a minute.
-5. Your site appears at `https://<random-name>.netlify.app`. Check it loads.
-6. **Domain management → Add a domain** → enter `vix-scan.co.uk`.
-7. Netlify shows the records to add. Choose one of the two options:
+After the first successful deploy:
 
-   **Option A — keep DNS at your registrar (simplest)**
+1. Go to **Settings → Pages → Custom domain**, enter `vix-scan.co.uk`, click **Save**.
+   (`public/CNAME` already ships the same value with every deploy.)
+2. Add the DNS records in the table below at your registrar (section 3 explains exactly where).
+3. Wait for GitHub to show **DNS check successful**, then tick **Enforce HTTPS**.
 
-   | Type | Name / Host | Value | TTL |
-   |---|---|---|---|
-   | A | `@` (apex / root) | `75.2.60.5` | 3600 |
-   | CNAME | `www` | `<your-site-name>.netlify.app` | 3600 |
-
-   If your registrar supports **ALIAS / ANAME / CNAME flattening**, you can use
-   `apex-loadbalancer.netlify.com` as the apex target instead of the A record.
-
-   **Option B — use Netlify DNS**
-
-   Copy the four nameservers Netlify gives you (for example `dns1.p01.nsone.net`) into the
-   registrar's **Nameservers** tab and save. Netlify then manages all records itself.
-
-8. In Netlify, set **Primary domain** to `vix-scan.co.uk`. Netlify adds the `www` → apex redirect
-   automatically.
-9. HTTPS is provisioned automatically by Let's Encrypt once DNS resolves. Check
-   **Domain management → HTTPS** shows "Your connection is secure".
-
-The build re-runs on every push to `main`, so publishing a change is just a `git push`.
-
-### DNS records for GitHub Pages (public repository only)
-
-Add these at your registrar (section 3 explains where):
+### DNS records for GitHub Pages
 
 | Type | Name / Host | Value | TTL |
 |---|---|---|---|
@@ -83,12 +63,8 @@ IPv6 equivalents (optional but recommended):
 | AAAA | `@` | `2606:50c0:8002::153` |
 | AAAA | `@` | `2606:50c0:8003::153` |
 
-> The `www` CNAME must be a **CNAME** (not an A record) and must point at `fivekcars.github.io`
+> The `www` record must be a **CNAME** (not an A record) pointing at `fivekcars.github.io`
 > — no `https://`, no trailing slash, no repository name.
-
-Then, in GitHub: **Settings → Pages → Source: GitHub Actions**, and set the custom domain to
-`vix-scan.co.uk`. `.github/workflows/deploy.yml` publishes `dist/` on every push to `main`, and
-`public/CNAME` keeps the domain attached.
 
 ---
 
@@ -116,20 +92,27 @@ The wording differs slightly per company, but the path is always the same:
    - Remove any existing **CNAME** for `www` pointing at a parking page.
    - Do **not** delete **MX** or **TXT** records — those handle email, including `vix.scan@yahoo.com`
      alias routing and domain verification.
-4. Add the **A records** for `@` exactly as listed for your chosen host in section 2 or 4.
-5. Add the **CNAME** record for `www` pointing at the host address your host gave you
-   (for example `fivekcars.github.io` or `<your-site-name>.netlify.app`).
+4. Add the **four A records** for `@` exactly as listed in section 2.
+5. Add the **CNAME** record for `www` → `fivekcars.github.io`.
 6. Save. Some panels ask for `@` vs blank: use `@` (or leave the name field empty) for the apex.
 7. If the panel has a **TTL** field, `3600` (1 hour) is fine; lower it to `300` while testing.
 8. Wait 15–60 minutes, then check propagation:
    - `nslookup vix-scan.co.uk`
    - `nslookup www.vix-scan.co.uk`
    - or https://dnschecker.org
-9. In your host's dashboard, confirm the domain shows as verified, then enable HTTPS / "Force HTTPS".
+9. In **GitHub → Settings → Pages**, confirm the custom domain shows **DNS check successful**,
+   then tick **Enforce HTTPS**.
 
 ---
 
-## 4. Alternative hosts — DNS records
+## 4. Alternative hosts (optional — not needed)
+
+### Netlify
+
+| Type | Name | Value |
+|---|---|---|
+| A | `@` | `75.2.60.5` |
+| CNAME | `www` | `<your-site-name>.netlify.app` |
 
 ### Vercel
 

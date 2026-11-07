@@ -81,13 +81,14 @@ Update all three if the phone number or email ever changes.
 
 ## Deployment
 
-The site is a static build, so it can be hosted anywhere. Pre-configured options:
+The site is a static build hosted free on **GitHub Pages** — no other service or account needed.
 
-- **Netlify** (recommended — the repository is private and Netlify's free plan supports private repos)
-  — `netlify.toml` (build `npm run build`, publish `dist`).
-- **Vercel** — `vercel.json` (Vite preset).
-- **Cloudflare Pages** — build `npm run build`, output `dist`.
-- **GitHub Pages** — `.github/workflows/deploy.yml`; requires a public repository or a paid GitHub plan.
+1. In the repository: **Settings → Pages → Source: GitHub Actions** (one-time toggle).
+2. Every push to `main` builds `dist/` and publishes it via `.github/workflows/deploy.yml`.
+3. Add the custom domain and DNS records in `docs/DOMAIN_AND_HOSTING_SETUP.md`.
+
+Alternative configs are included if you ever need them: `netlify.toml`, `vercel.json` (Cloudflare
+Pages also works with build `npm run build` and output `dist`).
 
 Full DNS and registrar instructions: [`docs/DOMAIN_AND_HOSTING_SETUP.md`](docs/DOMAIN_AND_HOSTING_SETUP.md).
 
