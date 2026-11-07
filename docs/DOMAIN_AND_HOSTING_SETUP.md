@@ -130,7 +130,30 @@ The wording differs slightly per company, but the path is always the same:
 
 ---
 
-## 5. Post-launch checks
+## 5. Troubleshooting
+
+### The domain loads, but the page is blank
+The Pages **Source** is set to *Deploy from a branch*. That publishes the raw repository root, whose
+`index.html` is the Vite shell that loads `/src/main.tsx` — browsers cannot execute TypeScript, so
+nothing renders.
+
+**Fix:** Settings → Pages → Build and deployment → **Source: GitHub Actions**. The built site in
+`dist/` is then published instead.
+
+### The browser says the connection is not secure
+- You are on `http://` — tick **Enforce HTTPS** under Settings → Pages once the first Actions deploy
+  has succeeded.
+- The certificate is issued automatically by Let's Encrypt after GitHub's DNS check passes at the
+  custom domain. This can take from a few minutes up to about an hour (occasionally 24 h).
+- If it never becomes available, confirm the four A records point at `185.199.108–111.153` and that
+  the `www` CNAME points at `fivekcars.github.io`.
+
+### `fivekcars.github.io` redirects to `vix-scan.co.uk`
+That is expected — the custom domain is attached, so GitHub redirects the default address to it.
+
+---
+
+## 6. Post-launch checks
 
 - [ ] `https://vix-scan.co.uk` loads the VIX-SCAN homepage.
 - [ ] `https://www.vix-scan.co.uk` also loads (add a redirect rule if your host does not do this automatically).
@@ -145,7 +168,7 @@ The wording differs slightly per company, but the path is always the same:
 
 ---
 
-## 6. Things only the business owner can confirm
+## 7. Things only the business owner can confirm
 
 These are deliberately **not** invented in the code:
 
