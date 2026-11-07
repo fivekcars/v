@@ -150,6 +150,17 @@ nothing renders.
 - If it never becomes available, confirm the four A records point at `185.199.108–111.153` and that
   the `www` CNAME points at `fivekcars.github.io`.
 
+### GitHub says "DNS check failed" but the records look right
+- The check uses cached resolver data. Records with a 6-hour TTL (`21600`) can take that long to be
+  picked up. Lower the TTL on the A/CNAME records to `300` at the registrar for faster re-checks.
+- Click **Check again** next to the message on **Settings → Pages**.
+- If it keeps failing, **remove** the custom domain, save, wait a minute, then **add**
+  `vix-scan.co.uk` again. That forces a fresh check and a new certificate request.
+- Confirm from your own machine: `nslookup vix-scan.co.uk` should return the four `185.199.*`
+  addresses, and `nslookup www.vix-scan.co.uk` should return `fivekcars.github.io`.
+- Certificate status: <https://api.github.com/repos/fivekcars/v/pages> → `https_certificate.state`.
+  `new` / `approved` / `issued` = provisioning in progress; once issued, tick **Enforce HTTPS**.
+
 ### `fivekcars.github.io` redirects to `vix-scan.co.uk`
 That is expected — the custom domain is attached, so GitHub redirects the default address to it.
 
